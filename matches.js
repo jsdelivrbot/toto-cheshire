@@ -1,4 +1,4 @@
-var pg = require('pg');
+var pg = require('pg').Pool();
 var crypto = require('crypto-js');
 
 module.exports = function(app) {
