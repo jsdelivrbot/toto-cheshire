@@ -34,7 +34,7 @@ module.exports = function(app) {
 			var contextId = getEncodedData(signature);
 			loadMatchDataAsync(contextId)
 			.then(function(result){
-				console.log("aqui1")
+				console.log("aqui1",result)
 				if (result) {
 					response.json({'success':true, 'contextId':contextId, 'empty': false, 'data':result});
 				} else {
@@ -42,7 +42,19 @@ module.exports = function(app) {
 				}
 			})
 			.catch(function(err){
-				console.log("aqui2",err)
+				if ("42P01" == err.code) {
+					//dont exists the database
+					var pool = new pg.Pool({
+						connectionString:process.env.DATABASE_URL
+					})
+					pool.query('CREATE TABLE IF NOT EXISTS matches (id SERIAL PRIMARY KEY,context text,data text)', function(err, result){
+						if(err){
+							console.log("creating database... failed",err)
+						}else{
+							console.log("creating database... success",result)
+						}
+					})
+				}
 				response.json({'success':false, 'error':err});
 			});
 		} else {
@@ -99,11 +111,12 @@ module.exports = function(app) {
 				pool.end()
 				if (err) {
 					reject(err);
-				}
-				if (result.rows.length > 0) {
-					resolve(result.rows[0].data);
-				} else {
-					resolve();
+				}else if(result){
+					if (result.rows.length > 0) {
+						resolve(result.rows[0].data);
+					} else {
+						resolve();
+					}
 				}
 			});
 		});
