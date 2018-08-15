@@ -70,7 +70,7 @@ module.exports = function(app) {
 				connectionString:process.env.DATABASE_URL
 			})
 			pool.query('SELECT * FROM matches WHERE context = $1::text', [contextId], function(err, result) {
-				console.log(err, result)
+				//console.log(err, result)
 				if (err) {
 					pool.end()
 					reject(err)
@@ -78,7 +78,7 @@ module.exports = function(app) {
 				if (result.rows.length > 0) {
                         // Update current match
                         pool.query('UPDATE matches SET data = $1::text WHERE context = $2::text', [data, contextId], function(upd_err, upd_result) {
-                        	console.log(upd_err, upd_result)
+                        	//console.log(upd_err, upd_result)
                         	pool.end()
                         	if (upd_err) {
                         		reject(upd_err);
@@ -89,7 +89,7 @@ module.exports = function(app) {
                     else {
                         // Insert new match
                         pool.query('INSERT INTO matches (context, data) VALUES ($1::text, $2::text)', [contextId, data], function(ist_err, ist_result) {
-                        	console.log(ist_err, ist_result)
+                        	//console.log(ist_err, ist_result)
                         	pool.end()
                         	if (ist_err) {
                         		reject(ist_err);
@@ -107,7 +107,7 @@ module.exports = function(app) {
 				connectionString:process.env.DATABASE_URL
 			})
 			pool.query('SELECT * FROM matches WHERE context = $1::text', [contextId], function(err, result) {
-				console.log(err, result)
+				//console.log(err, result)
 				pool.end()
 				if (err) {
 					reject(err);
