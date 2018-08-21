@@ -34,7 +34,6 @@ module.exports = function(app) {
 			var contextId = getEncodedData(signature);
 			loadMatchDataAsync(contextId)
 			.then(function(result){
-				console.log("aqui1",result)
 				if (result) {
 					response.json({'success':true, 'contextId':contextId, 'empty': false, 'data':result});
 				} else {
